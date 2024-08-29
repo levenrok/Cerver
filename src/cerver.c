@@ -1,9 +1,12 @@
 #include <libsocket/libinetsocket.h>
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "include/Err_Sock.h"
+
+void* handle_client(void* arg);
 
 int main(void) {
     int server_socket, client_socket;
@@ -26,8 +29,16 @@ int main(void) {
         }
     }
 
+    pthread_t client_thread;
+    pthread_create(&client_thread, NULL, handle_client, (void*)client_fd);
+    pthread_detach(client_thread);
+
     fclose(client_fd);
     destroy_inet_socket(client_socket);
     destroy_inet_socket(server_socket);
     exit(EXIT_SUCCESS);
+}
+
+void* handle_client(void* arg) {
+    return NULL;
 }
